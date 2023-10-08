@@ -1,0 +1,8 @@
+name: capture_webpage
+dependencies:
+  - python=3.11
+  - pydantic
+  - pyyaml
+  - pip
+  - pip:
+      - playwright

@@ -1,0 +1,4 @@
+udemy:
+    url: https://www.udemy.com
+    css: span[data-purpose=smart-bar-subtitle]
+    email: steven@vaningelgem.be
