@@ -59,7 +59,9 @@ class Config:
     @field_validator("sites")
     def set_unique_name(cls, sites: dict[str, SiteConfig]) -> dict:
         for key, value in sites.items():
-            value.unique_name = re.sub("[^-_ a-z0-9.]", "", key, flags=re.IGNORECASE).strip(". \r\n\t")
+            value.unique_name = re.sub(
+                "[^-_ a-z0-9.]", "", key, flags=re.IGNORECASE
+            ).strip(". \r\n\t")
         return sites
 
     @classmethod
