@@ -7,12 +7,12 @@ import yaml
 from pydantic import Field, constr, field_validator
 from pydantic.dataclasses import dataclass
 
-HttpURL = constr(strip_whitespace=True, min_length=1, pattern='^https?://.+$')
+HttpURL = constr(strip_whitespace=True, min_length=1, pattern="^https?://.+$")
 String = constr(strip_whitespace=True, min_length=1)
-Email = constr(strip_whitespace=True, min_length=1, pattern=r'^.+@.+\..+$')
+Email = constr(strip_whitespace=True, min_length=1, pattern=r"^.+@.+\..+$")
 
 
-__all__ = ["EmailConfig", "Config", "SiteConfig"]
+__all__ = ["Config", "EmailConfig", "SiteConfig"]
 
 
 @dataclass
@@ -40,7 +40,7 @@ class SiteConfig:
 
     @cached_property
     def _cache(self) -> Path:
-        cache_dir = Path(__file__).parent / '.cache'
+        cache_dir = Path(__file__).parent / ".cache"
         cache_dir.mkdir(mode=0o0700, parents=True, exist_ok=True)
         return cache_dir / f"{self.unique_name}.txt"
 
@@ -59,7 +59,7 @@ class Config:
     @field_validator("sites")
     def set_unique_name(cls, sites: dict[str, SiteConfig]) -> dict:
         for key, value in sites.items():
-            value.unique_name = re.sub("[^-_ a-z0-9.]", "", key, flags=re.IGNORECASE).strip('. \r\n\t')
+            value.unique_name = re.sub("[^-_ a-z0-9.]", "", key, flags=re.IGNORECASE).strip(". \r\n\t")
         return sites
 
     @classmethod

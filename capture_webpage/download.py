@@ -43,9 +43,9 @@ def send_email(to: str, subject: str, contents: str) -> None:
     msg = EmailMessage()
     msg.set_content(contents)
 
-    msg['Subject'] = subject
-    msg['From'] = cfg.sender
-    msg['To'] = to
+    msg["Subject"] = subject
+    msg["From"] = cfg.sender
+    msg["To"] = to
     email_server.send_message(msg)
 
 
@@ -60,22 +60,31 @@ async def worker(task_queue, browser):
             last_text = site_config.last_text or ""
 
             page = await browser.new_page()
-            await page.goto(site_config.url, wait_until='load')
+            await page.goto(site_config.url, wait_until="load")
             try:
                 # html = await page.inner_html('body')
                 new_text = await page.locator(site_config.css).inner_text(timeout=5_000)
 
                 if new_text.lower() != last_text.lower():
-                    send_email(site_config.email, f"New page content for '{site_config.unique_name}'", f"Old content: {last_text}\n\nNew content: {new_text}")
+                    send_email(
+                        site_config.email,
+                        f"New page content for '{site_config.unique_name}'",
+                        f"Old content: {last_text}\n\nNew content: {new_text}",
+                    )
 
             except async_api.TimeoutError:
-                send_email(site_config.email, "Error: timeout", f"A timeout occured while trying to find {site_config.css} on {site_config.url}.")
+                send_email(
+                    site_config.email,
+                    "Error: timeout",
+                    f"A timeout occured while trying to find {site_config.css} on {site_config.url}.",
+                )
 
             await page.close()
 
             task_queue.task_done()
     except BaseException as ex:
         logger.error("ERROR IN TASK: %s", ex)
+
 
 async def run_tasks(task_queue, browser, num_workers):
     # Signal workers to exit
