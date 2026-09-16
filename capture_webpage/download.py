@@ -91,7 +91,9 @@ async def run_tasks(task_queue, browser, num_workers):
     for _ in range(num_workers):
         task_queue.put_nowait(None)
 
-    workers = [asyncio.create_task(worker(task_queue, browser)) for _ in range(num_workers)]
+    workers = [
+        asyncio.create_task(worker(task_queue, browser)) for _ in range(num_workers)
+    ]
 
     # Wait for all tasks to be processed
     await task_queue.join()
